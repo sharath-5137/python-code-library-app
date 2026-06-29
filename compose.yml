@@ -21,7 +21,7 @@
           - my_network
         depends_on:
           - db
-    book_service:
+      book_service:
         image: sgsk5137/pyapp:book_image  
         deploy:
           replicas: 1
@@ -32,7 +32,7 @@
         depends_on:
           - db
 
-    borrow_service:
+      borrow_service:
         image: sgsk5137/pyapp:borrow_image  
         deploy:
           replicas: 1
@@ -43,7 +43,7 @@
         depends_on:
           - db
 
-    app_service:
+      app_service:
         image: sgsk5137/pyapp:app_image  
         deploy:
           replicas: 1
