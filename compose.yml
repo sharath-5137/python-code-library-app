@@ -1,60 +1,63 @@
 ---
-services:
-  db:
-    image: shaikmustafa/pyapp:db_image
-    deploy:
-      replicas: 1
-    ports:
-      - "3306:3306"
-    networks:
-      - mynetwork
+    services:
+      db:
+        image: sgsk5137/pyapp:db_image  
+        deploy:
+          replicas: 1
+        ports:
+          - "3306:3306"
+        networks:
+          - my_network
+        volumes:
+          - db_data:/var/lib/mysql
+      
+      auth_service:
+        image: sgsk5137/pyapp:auth_image  
+        deploy:
+          replicas: 1
+        ports:
+          - "5001:5001"
+        networks:
+          - my_network
+        depends_on:
+          - db
+     book_service:
+        image: sgsk5137/pyapp:book_image  
+        deploy:
+          replicas: 1
+        ports:
+          - "5002:5002"
+        networks:
+          - my_network
+        depends_on:
+          - db
 
-  auth_service:
-    image: shaikmustafa/pyapp:auth_image
-    deploy:
-      replicas: 1
-    ports:
-      - "5001:5001"
-    networks:
-      - mynetwork
-    depends_on:
-      - db
+    borrow_service:
+        image: sgsk5137/pyapp:borrow_image  
+        deploy:
+          replicas: 1
+        ports:
+          - "5003:5003"
+        networks:
+          - my_network
+        depends_on:
+          - db
+
+    app_service:
+        image: sgsk5137/pyapp:app_image  
+        deploy:
+          replicas: 1
+        ports:
+          - "5000:5000"
+        networks:
+          - my_network
+        depends_on:
+          - auth_service
+          - book_service
+          - borrow_service
     
-
-  book_service:
-    image: shaikmustafa/pyapp:book_image
-    deploy:
-      replicas: 1
-    ports:
-      - "5002:5002"
-    networks:
-      - mynetwork
-    depends_on:
-      - db
-  borrow_service:
-    image: shaikmustafa/pyapp:borrow_image
-    deploy:
-      replicas: 1
-    ports:
-      - "5003:5003"
-    networks:
-      - mynetwork
-    depends_on:
-      - db
-
-  frontend:
-    image: shaikmustafa/pyapp:frontend
-    deploy:
-      replicas: 1
-    ports:
-      - "5000:5000"
-    networks:
-      - mynetwork
-    depends_on:
-      - auth
-      - book
-      - borrow
-
 networks:
-  mynetwork:
+  my_network:
     driver: overlay
+volumes:
+  db_data:
