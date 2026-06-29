@@ -58,6 +58,6 @@
     
     networks:
         my_network:
-        driver: overlay
+          driver: overlay
     volumes:
       db_data:
